@@ -38,6 +38,7 @@ public class HinhanhService {
         }
 
         String imgDir = System.getProperty("user.dir") + "/uploads/imgs";
+        System.out.println("imgDir = " + imgDir);
         Path dirPath = Paths.get(imgDir);
         if (!Files.exists(dirPath)) {
             Files.createDirectories(dirPath); // tự tạo folder uploads/imgs nếu chưa có
