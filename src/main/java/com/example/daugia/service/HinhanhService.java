@@ -4,147 +4,100 @@ import com.example.daugia.entity.Hinhanh;
 import com.example.daugia.entity.Sanpham;
 import com.example.daugia.repository.HinhanhRepository;
 import com.example.daugia.repository.SanphamRepository;
+import com.example.daugia.service.storage.SupabaseStorageService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class HinhanhService {
-    @Autowired
-    private HinhanhRepository hinhanhRepository;
-    @Autowired
-    private SanphamRepository sanphamRepository;
+    private final HinhanhRepository hinhanhRepository;
+    private final SanphamRepository sanphamRepository;
+    private final SupabaseStorageService storage;
 
-    public List<Hinhanh> findAll(){
+    @Value("${storage.max-size-mb:5}")
+    private int maxSizeMb;
+
+    public HinhanhService(HinhanhRepository hinhanhRepository,
+                          SanphamRepository sanphamRepository,
+                          SupabaseStorageService storage) {
+        this.hinhanhRepository = hinhanhRepository;
+        this.sanphamRepository = sanphamRepository;
+        this.storage = storage;
+    }
+
+    public List<Hinhanh> findAll() {
         return hinhanhRepository.findAll();
     }
 
     @Transactional
-    public List<Hinhanh> saveFiles(String masp, List<MultipartFile> files) throws IOException {
+    public List<Hinhanh> saveFiles(String masp, List<MultipartFile> files) throws Exception {
         Sanpham sanpham = sanphamRepository.findById(masp)
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
-
         if (files == null || files.isEmpty()) {
             throw new IllegalArgumentException("Không có file nào được gửi lên");
-        }
-
-        String imgDir = System.getProperty("user.dir") + "/uploads/imgs";
-        Path dirPath = Paths.get(imgDir);
-        if (!Files.exists(dirPath)) {
-            Files.createDirectories(dirPath); // tự tạo folder uploads/imgs nếu chưa có
         }
 
         List<Hinhanh> savedImages = new ArrayList<>();
         for (MultipartFile file : files) {
-            String filename = file.getOriginalFilename();
-            Path filePath = dirPath.resolve(filename);
-            file.transferTo(filePath.toFile());
-
+            if (file.isEmpty()) continue;
+            SupabaseStorageService.UploadResult up = storage.uploadProductImage(masp, file, maxSizeMb);
             Hinhanh h = new Hinhanh();
-            h.setTenanh(filename);
+            h.setTenanh(up.key());   // Lưu KEY: <bucket>/<path>
             h.setSanPham(sanpham);
             savedImages.add(hinhanhRepository.save(h));
         }
-
         return savedImages;
     }
 
     @Transactional
-    public List<Hinhanh> updateFiles(String masp, List<MultipartFile> files) throws IOException {
-        // 1️⃣ Tìm sản phẩm
+    public List<Hinhanh> updateFiles(String masp, List<MultipartFile> files) throws Exception {
         Sanpham sanpham = sanphamRepository.findById(masp)
                 .orElseThrow(() -> new IllegalArgumentException("Sản phẩm không tồn tại"));
-
         if (files == null || files.isEmpty()) {
             throw new IllegalArgumentException("Không có file nào được gửi lên");
         }
 
-        // 2️⃣ Đường dẫn thư mục ảnh
-        String imgDir = System.getProperty("user.dir") + "/imgs";
-        Path dirPath = Paths.get(imgDir);
-        if (!Files.exists(dirPath)) {
-            Files.createDirectories(dirPath);
-        }
-
-        // 3️⃣ Lấy danh sách ảnh hiện tại
         List<Hinhanh> currentImages = sanpham.getHinhAnh();
-        if (currentImages == null) {
-            currentImages = new ArrayList<>();
-            sanpham.setHinhAnh(currentImages);
-        }
+        if (currentImages == null) currentImages = new ArrayList<>();
 
-        // 4️⃣ Duyệt qua từng file được gửi từ FE
         for (int i = 0; i < files.size(); i++) {
             MultipartFile file = files.get(i);
             if (file.isEmpty()) continue;
 
-            String originalName = file.getOriginalFilename();
+            SupabaseStorageService.UploadResult up = storage.uploadProductImage(masp, file, maxSizeMb);
 
-            // Làm sạch tên file (bỏ dấu, lowercase, thay khoảng trắng bằng '-')
-            String cleanName = Normalizer.normalize(originalName, Normalizer.Form.NFD)
-                    .replaceAll("\\p{M}", "")
-                    .replaceAll("[^a-zA-Z0-9\\.\\-]", "-")
-                    .toLowerCase();
-
-            Path targetPath = dirPath.resolve(cleanName);
-
-            // Nếu đã có ảnh ở vị trí này thì xóa file cũ và update record
             if (i < currentImages.size()) {
-                Hinhanh oldImage = currentImages.get(i);
+                // Xóa object cũ trên Supabase
+                String oldKey = currentImages.get(i).getTenanh();
+                try { storage.deleteObject(oldKey); } catch (Exception ignored) {}
 
-                // Xóa file cũ trong thư mục nếu tồn tại
-                Path oldPath = dirPath.resolve(oldImage.getTenanh());
-                try {
-                    Files.deleteIfExists(oldPath);
-                } catch (IOException e) {
-                    System.err.println("Không thể xóa file cũ: " + oldPath);
-                }
-
-                // Lưu file mới
-                file.transferTo(targetPath.toFile());
-
-                // Cập nhật record DB
-                oldImage.setTenanh(cleanName);
-                hinhanhRepository.save(oldImage);
+                currentImages.get(i).setTenanh(up.key());
+                hinhanhRepository.save(currentImages.get(i));
             } else {
-                // Nếu chưa có ảnh ở vị trí này, thêm mới
-                file.transferTo(targetPath.toFile());
-
                 Hinhanh newImg = new Hinhanh();
-                newImg.setTenanh(cleanName);
+                newImg.setTenanh(up.key());
                 newImg.setSanPham(sanpham);
                 hinhanhRepository.save(newImg);
-
                 currentImages.add(newImg);
             }
         }
 
-        // 5️⃣ Giữ tối đa 3 ảnh
+        // Giữ tối đa 3 ảnh
         if (currentImages.size() > 3) {
-            // Xóa file dư + record dư
             for (int i = 3; i < currentImages.size(); i++) {
-                Hinhanh extra = currentImages.get(i);
-                Path extraPath = dirPath.resolve(extra.getTenanh());
-                Files.deleteIfExists(extraPath);
-                hinhanhRepository.delete(extra);
+                try { storage.deleteObject(currentImages.get(i).getTenanh()); } catch (Exception ignored) {}
+                hinhanhRepository.delete(currentImages.get(i));
             }
             currentImages = currentImages.subList(0, 3);
         }
 
-        // 6️⃣ Lưu cập nhật vào DB
         sanpham.setHinhAnh(currentImages);
         sanphamRepository.save(sanpham);
-
         return currentImages;
     }
-
 }
