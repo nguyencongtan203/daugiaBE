@@ -37,10 +37,10 @@ public class HinhanhService {
             throw new IllegalArgumentException("Không có file nào được gửi lên");
         }
 
-        String imgDir = System.getProperty("user.dir") + "/imgs";
+        String imgDir = System.getProperty("user.dir") + "/uploads/imgs";
         Path dirPath = Paths.get(imgDir);
         if (!Files.exists(dirPath)) {
-            Files.createDirectories(dirPath);
+            Files.createDirectories(dirPath); // tự tạo folder uploads/imgs nếu chưa có
         }
 
         List<Hinhanh> savedImages = new ArrayList<>();
