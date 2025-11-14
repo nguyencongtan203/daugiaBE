@@ -1,0 +1,204 @@
+package com.example.daugia.entity;
+
+import com.example.daugia.core.enums.TrangThaiPhienDauGia;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.List;
+
+@Entity
+public class Phiendaugia {
+    public static final String ID_PREFIX = "DG";
+    @Id
+    @GeneratedValue(generator = "prefix-id")
+    @GenericGenerator(name = "prefix-id", strategy = "com.example.daugia.core.custom.PrefixIdGenerator")
+    private String maphiendg;
+
+    @OneToOne
+    @JoinColumn(name = "masp")
+    @JsonBackReference
+    private Sanpham sanPham;
+
+    @OneToOne(mappedBy = "phienDauGia")
+    @JsonBackReference
+    private Phieuthanhtoan phieuThanhToan;
+
+    @ManyToOne
+    @JoinColumn(name = "maqtv")
+    @JsonBackReference
+    private Taikhoanquantri taiKhoanQuanTri;
+
+    @ManyToOne
+    @JoinColumn(name = "makh")
+    @JsonManagedReference
+    private Taikhoan taiKhoan;
+
+    @OneToMany(mappedBy = "phienDauGia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Phientragia> phienTraGia;
+
+    @OneToMany(mappedBy = "phienDauGia", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonBackReference
+    private List<Phieuthanhtoantiencoc> phieuThanhToanTienCoc;
+
+    private TrangThaiPhienDauGia trangthai;
+    private Timestamp thoigianbd;
+    private Timestamp thoigiankt;
+    private Timestamp thoigianbddk;
+    private Timestamp thoigianktdk;
+    private BigDecimal giakhoidiem;
+    private BigDecimal giatran;
+    private BigDecimal buocgia;
+    private BigDecimal giacaonhatdatduoc;
+    private BigDecimal tiencoc;
+    private int slnguoithamgia;
+
+    public String getMaphiendg() {
+        return maphiendg;
+    }
+
+    public void setMaphiendg(String maphiendg) {
+        this.maphiendg = maphiendg;
+    }
+
+    public Sanpham getSanPham() {
+        return sanPham;
+    }
+
+    public void setSanPham(Sanpham sanPham) {
+        this.sanPham = sanPham;
+    }
+
+    public Phieuthanhtoan getPhieuThanhToan() {
+        return phieuThanhToan;
+    }
+
+    public void setPhieuThanhToan(Phieuthanhtoan phieuThanhToan) {
+        this.phieuThanhToan = phieuThanhToan;
+    }
+
+    public Taikhoanquantri getTaiKhoanQuanTri() {
+        return taiKhoanQuanTri;
+    }
+
+    public void setTaiKhoanQuanTri(Taikhoanquantri taiKhoanQuanTri) {
+        this.taiKhoanQuanTri = taiKhoanQuanTri;
+    }
+
+    public Taikhoan getTaiKhoan() {
+        return taiKhoan;
+    }
+
+    public void setTaiKhoan(Taikhoan taiKhoan) {
+        this.taiKhoan = taiKhoan;
+    }
+
+    public List<Phientragia> getPhienTraGia() {
+        return phienTraGia;
+    }
+
+    public void setPhienTraGia(List<Phientragia> phienTraGia) {
+        this.phienTraGia = phienTraGia;
+    }
+
+    public List<Phieuthanhtoantiencoc> getPhieuThanhToanTienCoc() {
+        return phieuThanhToanTienCoc;
+    }
+
+    public void setPhieuThanhToanTienCoc(List<Phieuthanhtoantiencoc> phieuThanhToanTienCoc) {
+        this.phieuThanhToanTienCoc = phieuThanhToanTienCoc;
+    }
+
+    public TrangThaiPhienDauGia getTrangthai() {
+        return trangthai;
+    }
+
+    public void setTrangthai(TrangThaiPhienDauGia trangthai) {
+        this.trangthai = trangthai;
+    }
+
+    public Timestamp getThoigianbd() {
+        return thoigianbd;
+    }
+
+    public void setThoigianbd(Timestamp thoigianbd) {
+        this.thoigianbd = thoigianbd;
+    }
+
+    public Timestamp getThoigiankt() {
+        return thoigiankt;
+    }
+
+    public void setThoigiankt(Timestamp thoigiankt) {
+        this.thoigiankt = thoigiankt;
+    }
+
+    public Timestamp getThoigianbddk() {
+        return thoigianbddk;
+    }
+
+    public void setThoigianbddk(Timestamp thoigianbddk) {
+        this.thoigianbddk = thoigianbddk;
+    }
+
+    public Timestamp getThoigianktdk() {
+        return thoigianktdk;
+    }
+
+    public void setThoigianktdk(Timestamp thoigianktdk) {
+        this.thoigianktdk = thoigianktdk;
+    }
+
+    public BigDecimal getGiakhoidiem() {
+        return giakhoidiem;
+    }
+
+    public void setGiakhoidiem(BigDecimal giakhoidiem) {
+        this.giakhoidiem = giakhoidiem;
+    }
+
+    public BigDecimal getGiatran() {
+        return giatran;
+    }
+
+    public void setGiatran(BigDecimal giatran) {
+        this.giatran = giatran;
+    }
+
+    public BigDecimal getBuocgia() {
+        return buocgia;
+    }
+
+    public void setBuocgia(BigDecimal buocgia) {
+        this.buocgia = buocgia;
+    }
+
+    public BigDecimal getGiacaonhatdatduoc() {
+        return giacaonhatdatduoc;
+    }
+
+    public void setGiacaonhatdatduoc(BigDecimal giacaonhatdatduoc) {
+        this.giacaonhatdatduoc = giacaonhatdatduoc;
+    }
+
+    public BigDecimal getTiencoc() {
+        return tiencoc;
+    }
+
+    public void setTiencoc(BigDecimal tiencoc) {
+        this.tiencoc = tiencoc;
+    }
+
+    public int getSlnguoithamgia() {
+        return slnguoithamgia;
+    }
+
+    public void setSlnguoithamgia(int slnguoithamgia) {
+        this.slnguoithamgia = slnguoithamgia;
+    }
+}

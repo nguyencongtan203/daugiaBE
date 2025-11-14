@@ -1,0 +1,195 @@
+package com.example.daugia.dto.response;
+
+import com.example.daugia.core.enums.TrangThaiPhienDauGia;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
+public class AuctionDTO {
+    private String maphiendg;
+    private UserShortDTO taiKhoanNguoiBan;
+    private UserShortDTO taiKhoanQuanTri;
+    private ProductDTO sanPham;
+    private TrangThaiPhienDauGia trangthai;
+    private Timestamp thoigianbd;
+    private Timestamp thoigiankt;
+    private Timestamp thoigianbddk;
+    private Timestamp thoigianktdk;
+    private BigDecimal giakhoidiem;
+    private BigDecimal giatran;
+    private BigDecimal buocgia;
+    private BigDecimal giacaonhatdatduoc;
+    private BigDecimal tiencoc;
+    private int slnguoithamgia;
+
+    public AuctionDTO(String maphiendg, UserShortDTO taiKhoanNguoiBan, UserShortDTO taiKhoanQuanTri, TrangThaiPhienDauGia trangthai, Timestamp thoigianbd, Timestamp thoigiankt, Timestamp thoigianbddk, Timestamp thoigianktdk, BigDecimal giakhoidiem, BigDecimal giatran, BigDecimal buocgia, BigDecimal giacaonhatdatduoc, BigDecimal tiencoc, int slnguoithamgia) {
+        this.maphiendg = maphiendg;
+        this.taiKhoanNguoiBan = taiKhoanNguoiBan;
+        this.taiKhoanQuanTri = taiKhoanQuanTri;
+        this.trangthai = trangthai;
+        this.thoigianbd = thoigianbd;
+        this.thoigiankt = thoigiankt;
+        this.thoigianbddk = thoigianbddk;
+        this.thoigianktdk = thoigianktdk;
+        this.giakhoidiem = giakhoidiem;
+        this.giatran = giatran;
+        this.buocgia = buocgia;
+        this.giacaonhatdatduoc = giacaonhatdatduoc;
+        this.tiencoc = tiencoc;
+        this.slnguoithamgia = slnguoithamgia;
+    }
+
+    public AuctionDTO(String maphiendg, UserShortDTO taiKhoanNguoiBan,ProductDTO sanPham, TrangThaiPhienDauGia trangthai, Timestamp thoigianbd, Timestamp thoigiankt, Timestamp thoigianbddk, Timestamp thoigianktdk, BigDecimal giakhoidiem, BigDecimal giatran, BigDecimal buocgia, BigDecimal tiencoc) {
+        this.maphiendg = maphiendg;
+        this.taiKhoanNguoiBan = taiKhoanNguoiBan;
+        this.sanPham = sanPham;
+        this.trangthai = trangthai;
+        this.thoigianbd = thoigianbd;
+        this.thoigiankt = thoigiankt;
+        this.thoigianbddk = thoigianbddk;
+        this.thoigianktdk = thoigianktdk;
+        this.giakhoidiem = giakhoidiem;
+        this.giatran = giatran;
+        this.buocgia = buocgia;
+        this.tiencoc = tiencoc;
+    }
+
+    public AuctionDTO(String maphiendg) {
+        this.maphiendg = maphiendg;
+    }
+
+    public AuctionDTO(String maphiendg, BigDecimal giacaonhatdatduoc) {
+        this.maphiendg = maphiendg;
+        this.giacaonhatdatduoc = giacaonhatdatduoc;
+    }
+
+    public AuctionDTO(BigDecimal tiencoc, String maphiendg) {
+        this.tiencoc = tiencoc;
+        this.maphiendg = maphiendg;
+    }
+
+    public AuctionDTO() {
+    }
+
+    public String getMaphiendg() {
+        return maphiendg;
+    }
+
+    public void setMaphiendg(String maphiendg) {
+        this.maphiendg = maphiendg;
+    }
+
+    public UserShortDTO getTaiKhoanNguoiBan() {
+        return taiKhoanNguoiBan;
+    }
+
+    public void setTaiKhoanNguoiBan(UserShortDTO taiKhoanNguoiBan) {
+        this.taiKhoanNguoiBan = taiKhoanNguoiBan;
+    }
+
+    public UserShortDTO getTaiKhoanQuanTri() {
+        return taiKhoanQuanTri;
+    }
+
+    public void setTaiKhoanQuanTri(UserShortDTO taiKhoanQuanTri) {
+        this.taiKhoanQuanTri = taiKhoanQuanTri;
+    }
+
+    public TrangThaiPhienDauGia getTrangthai() {
+        return trangthai;
+    }
+
+    public void setTrangthai(TrangThaiPhienDauGia trangthai) {
+        this.trangthai = trangthai;
+    }
+
+    public Timestamp getThoigianbd() {
+        return thoigianbd;
+    }
+
+    public void setThoigianbd(Timestamp thoigianbd) {
+        this.thoigianbd = thoigianbd;
+    }
+
+    public Timestamp getThoigiankt() {
+        return thoigiankt;
+    }
+
+    public void setThoigiankt(Timestamp thoigiankt) {
+        this.thoigiankt = thoigiankt;
+    }
+
+    public Timestamp getThoigianbddk() {
+        return thoigianbddk;
+    }
+
+    public void setThoigianbddk(Timestamp thoigianbddk) {
+        this.thoigianbddk = thoigianbddk;
+    }
+
+    public Timestamp getThoigianktdk() {
+        return thoigianktdk;
+    }
+
+    public void setThoigianktdk(Timestamp thoigianktdk) {
+        this.thoigianktdk = thoigianktdk;
+    }
+
+    public BigDecimal getGiakhoidiem() {
+        return giakhoidiem;
+    }
+
+    public void setGiakhoidiem(BigDecimal giakhoidiem) {
+        this.giakhoidiem = giakhoidiem;
+    }
+
+    public BigDecimal getGiatran() {
+        return giatran;
+    }
+
+    public void setGiatran(BigDecimal giatran) {
+        this.giatran = giatran;
+    }
+
+    public BigDecimal getBuocgia() {
+        return buocgia;
+    }
+
+    public void setBuocgia(BigDecimal buocgia) {
+        this.buocgia = buocgia;
+    }
+
+    public BigDecimal getGiacaonhatdatduoc() {
+        return giacaonhatdatduoc;
+    }
+
+    public void setGiacaonhatdatduoc(BigDecimal giacaonhatdatduoc) {
+        this.giacaonhatdatduoc = giacaonhatdatduoc;
+    }
+
+    public BigDecimal getTiencoc() {
+        return tiencoc;
+    }
+
+    public void setTiencoc(BigDecimal tiencoc) {
+        this.tiencoc = tiencoc;
+    }
+
+    public int getSlnguoithamgia() {
+        return slnguoithamgia;
+    }
+
+    public void setSlnguoithamgia(int slnguoithamgia) {
+        this.slnguoithamgia = slnguoithamgia;
+    }
+
+    public ProductDTO getSanPham() {
+        return sanPham;
+    }
+
+    public void setSanPham(ProductDTO sanPham) {
+        this.sanPham = sanPham;
+    }
+}
