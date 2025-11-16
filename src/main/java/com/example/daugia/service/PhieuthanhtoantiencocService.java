@@ -153,13 +153,11 @@ public class PhieuthanhtoantiencocService {
         vnp_Params.put("vnp_ReturnUrl", PaymentConfig.vnp_ReturnDepositUrl);
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
 
-        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Asia/Ho_Chi_Minh"));
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
-        String vnp_CreateDate = formatter.format(cld.getTime());
+        ZoneId VN = ZoneId.of("Asia/Ho_Chi_Minh");
+        DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String vnp_CreateDate = FMT.format(ZonedDateTime.now(VN));
+        String vnp_ExpireDate = FMT.format(ZonedDateTime.now(VN).plusMinutes(15));
         vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
-
-        cld.add(Calendar.MINUTE, 15);
-        String vnp_ExpireDate = formatter.format(cld.getTime());
         vnp_Params.put("vnp_ExpireDate", vnp_ExpireDate);
 
         List fieldNames = new ArrayList(vnp_Params.keySet());
