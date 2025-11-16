@@ -56,7 +56,8 @@ public class PhiendaugiaService {
                         phiendaugia.getGiakhoidiem(),
                         phiendaugia.getGiatran(),
                         phiendaugia.getBuocgia(),
-                        phiendaugia.getTiencoc()
+                        phiendaugia.getTiencoc(),
+                        phiendaugia.getSlnguoithamgia()
                 ))
                 .toList();
     }
@@ -96,7 +97,8 @@ public class PhiendaugiaService {
                 phiendaugia.getGiakhoidiem(),
                 phiendaugia.getGiatran(),
                 phiendaugia.getBuocgia(),
-                phiendaugia.getTiencoc()
+                phiendaugia.getTiencoc(),
+                phiendaugia.getSlnguoithamgia()
         );
     }
 
@@ -139,7 +141,8 @@ public class PhiendaugiaService {
                         phien.getGiakhoidiem(),
                         phien.getGiatran(),
                         phien.getBuocgia(),
-                        phien.getTiencoc()
+                        phien.getTiencoc(),
+                        phien.getSlnguoithamgia()
                 ))
                 .toList();
     }
@@ -163,7 +166,8 @@ public class PhiendaugiaService {
                 phiendaugia.getGiakhoidiem(),
                 phiendaugia.getGiatran(),
                 phiendaugia.getBuocgia(),
-                phiendaugia.getTiencoc()
+                phiendaugia.getTiencoc(),
+                phiendaugia.getSlnguoithamgia()
         );
     }
 
