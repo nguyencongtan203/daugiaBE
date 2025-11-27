@@ -7,12 +7,15 @@ import com.example.daugia.dto.response.CityDTO;
 import com.example.daugia.dto.response.ImageDTO;
 import com.example.daugia.dto.response.ProductDTO;
 import com.example.daugia.dto.response.UserShortDTO;
+import com.example.daugia.entity.Hinhanh;
 import com.example.daugia.entity.Sanpham;
 import com.example.daugia.entity.Taikhoan;
 import com.example.daugia.entity.Taikhoanquantri;
 import com.example.daugia.exception.NotFoundException;
 import com.example.daugia.exception.ValidationException;
 import com.example.daugia.repository.*;
+import com.example.daugia.service.storage.SupabaseStorageService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +40,8 @@ public class SanphamService {
     private ThanhphoRepository thanhphoRepository;
     @Autowired
     private TaikhoanquantriRepository taikhoanquantriRepository;
+    @Autowired
+    private SupabaseStorageService storage;
 
     public List<ProductDTO> findAll() {
         List<Sanpham> sanphamList = sanphamRepository.findAll();
@@ -141,13 +146,24 @@ public class SanphamService {
         );
     }
 
+    @Transactional
     public String delete(String masp, String email) {
         Sanpham sanpham = sanphamRepository.findById(masp)
                 .orElseThrow(() -> new NotFoundException("Không tìm thấy sản phẩm"));
-        if(!email.equals(sanpham.getTaiKhoan().getEmail()))
+        if (!email.equals(sanpham.getTaiKhoan().getEmail()))
             throw new ValidationException("Bạn không phải chủ sản phẩm");
-        if(sanpham.getTrangthai() == AUCTION_CREATED)
+        if (sanpham.getTrangthai() == AUCTION_CREATED)
             throw new ValidationException("Sản phẩm đã được tạo phiên");
+
+        List<Hinhanh> hinhAnhList = sanpham.getHinhAnh();
+        if (hinhAnhList != null) {
+            for (Hinhanh h : hinhAnhList) {
+                try {
+                    storage.deleteObject(h.getTenanh());
+                } catch (Exception ignored) {}
+            }
+        }
+
         sanphamRepository.delete(sanpham);
         return "Xóa sản phẩm thành công!";
     }
