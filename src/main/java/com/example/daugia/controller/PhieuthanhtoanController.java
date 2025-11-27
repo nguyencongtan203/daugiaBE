@@ -46,7 +46,7 @@ public class PhieuthanhtoanController {
     @GetMapping("/create-order")
     public ApiResponse<String> createOrder(HttpServletRequest request) {
         String paymentUrl = phieuthanhtoanService.createOrder(request);
-        return ApiResponse.success(paymentUrl, "Tạo URL thanh toán thành công");
+        return ApiResponse.success(paymentUrl, "Tạo URL thanh toán thành công!");
     }
 
     // Redirect endpoint giữ riêng, không dùng ApiResponse JSON
