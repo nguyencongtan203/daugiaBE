@@ -165,7 +165,7 @@ public class SanphamService {
         }
 
         sanphamRepository.delete(sanpham);
-        return "Xóa sản phẩm thành công!";
+        return "Xóa sản phẩm thành công!!!";
     }
 
     public ProductDTO approveProduct(String masp, String emailAdmin) {
