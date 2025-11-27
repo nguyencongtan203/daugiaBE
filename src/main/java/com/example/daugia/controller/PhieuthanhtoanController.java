@@ -55,12 +55,12 @@ public class PhieuthanhtoanController {
         int result = phieuthanhtoanService.orderReturn(request);
         if (result == 1) {
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", "http://localhost:5173/payment-success")
+                    .header("Location", "https://daugiastu-production.up.railway.app/payment-success")
                     .build();
         }
         // 0 = thất bại/hủy, -1 = chữ ký không hợp lệ → đều đưa về trang fail
         return ResponseEntity.status(HttpStatus.FOUND)
-                .header("Location", "http://localhost:5173/payment-fail")
+                .header("Location", "https://daugiastu-production.up.railway.app/payment-fail")
                 .build();
     }
 
