@@ -134,7 +134,7 @@ public class PhientragiaService {
         if (lastBid.isPresent()) {
             Timestamp lockUntil = lastBid.get().getThoigiancho();
             if (lockUntil != null && lockUntil.after(now)) {
-                throw new ValidationException("Bạn phải đợi hết thời gian chờ mới được trả giá lại!");
+                throw new ValidationException("Bạn phải đợi hết thời gian chờ mới được trả giá lại!!");
             }
         }
     }
